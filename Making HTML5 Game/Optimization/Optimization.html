@@ -1,0 +1,104 @@
+<html>
+
+<head>
+<title>RPG</title>
+</head>
+
+<body>
+<canvas id="ctx" width="500" height="500" style="border: 1px solid #000000"></canvas>
+
+<script>
+
+// import canvas into script
+
+var ctx = document.getElementById("ctx").getContext("2d");
+ctx.font = '30px Arial'; // font used
+
+var HEIGHT = 500;
+var WIDTH = 500;
+var message = 'Bouncing';
+
+
+//player
+
+
+var player = {
+x:50,
+spdX:30,
+y:40,
+spdY:5,
+name:'P'
+
+}; 
+
+
+//enemy
+
+
+//group all enemy variables in a JSON 
+//to refer a variable in an object, type enemy.x or enemy('x')
+ 
+var enemy = {
+x:150,
+spdX:10,
+y:150,
+spdY:15,
+name:'E'
+
+}; 
+
+// use function to repeat coding
+
+setInterval(update, 40); //(nameOfFunction, period in millisec) setInterval determines the speed in frame(image) per second of a variable(s)
+
+
+function update(){
+
+//Player
+Player.x += Player.spdX;
+Player.y += Player.spdY;   
+ctx.fillText(Player.name, Player.x, Player.y); 
+
+if(Player.x < 0 || Player.x > WIDTH){
+
+console.log(message);
+Player.spdX = -Player.spdX;
+}
+
+if(y < 0 || y > HEIGHT){
+
+console.log(message);
+spdY = -spdY;
+}
+
+//Enemy
+enemy.x += enemy.spdX;
+enemy.y += enemy.spdY;   
+ctx.fillText(enemy.name, enemy.x, enemy.y); 
+
+if(enemy.x < 0 || enemy.x > WIDTH){
+
+console.log(message);
+enemy.spdX = -enemy.spdX;
+}
+
+if(enemy.y < 0 || enemy.y > HEIGHT){
+
+console.log(message);
+enemy.spdY = -enemy.spdY;
+}
+
+}
+
+
+
+
+
+
+// difference between clearRect and fillRect
+</script>
+
+
+</body>
+
+</html>

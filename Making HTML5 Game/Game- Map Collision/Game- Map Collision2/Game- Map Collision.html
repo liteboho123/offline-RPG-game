@@ -1,0 +1,258 @@
+<html>
+
+<head lang="en">
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+<meta content="utf-8" http-equiv="encoding"/>
+<title>RPG</title>
+</head>
+
+<body>
+<canvas id="ctx" width="500px" height="500px" style="border: 1px solid #000000"></canvas>
+<script src="js/Entities.js"></script>
+<script>
+
+var ctc = document.getElementById("ctx");
+var ctx = document.getElementById("ctx").getContext("2d");
+ctx.font = '30px Arial'; // font used
+ctx.mozImageSmoothingEnabled = false;//better quality smoothing
+ctx.msImageSmoothingEnabled = false;
+ctx.imageSmoothingEnabled = false;
+
+var TILE_SIZE = 32;
+
+var HEIGHT = 500;
+var WIDTH = 500;
+var timeWhenGameStarted = Date.now();
+var frameCount = 0;
+var score = 0;
+var paused = false;
+
+// load image in memory
+var Img = {};
+Img.player = new Image();
+Img.player.src = "img/player.jpg";
+Img.bat = new Image();
+Img.bat.src = "img/bat.jpg";
+Img.bee = new Image();
+Img.bee.src = "img/bee.jpg";
+Img.bullet = new Image();
+Img.bullet.src = "img/bullet.jpg";
+Img.upgrade1 = new Image();
+Img.upgrade1.src = "img/upgrade1.jpg";
+Img.upgrade2 = new Image();
+Img.upgrade2.src = "img/upgrade2.jpg";
+Img.map = new Image();
+Img.map.src = "img/map.jpg";
+
+document.onmousedown = function(mouse){ // when the mouse button is clicked down
+if(mouse.which === 1){ // when the left button of the mouse is clicked down
+player.pressingMouseLeft = true;
+}else{ // when the right button of the mouse is clicked down
+player.pressingMouseRight = true;
+}
+};
+
+document.onmouseup = function(mouse){ // when the mouse button is clicked down
+if(mouse.which === 1){ // when the left button of the mouse is clicked down
+player.pressingMouseLeft = false;
+}else{ // when the right button of the mouse is clicked down
+player.pressingMouseRight = false;
+}
+};
+
+document.oncontextmenu = function(mouse){ // on right click
+mouse.preventDefault();
+};
+
+document.onmousemove = function(mouse){
+
+var mouseX = mouse.clientX - document.getElementById('ctx').getBoundingClientRect().left*2;
+var mouseY = mouse.clientY - document.getElementById('ctx').getBoundingClientRect().top*2;
+
+mouseX -= WIDTH/2;
+mouseY -= HEIGHT/2;
+
+player.aimAngle = Math.atan2(mouseY, mouseX)/Math.PI * 180;
+
+};
+
+document.onkeyup = function(event){ // when key is released
+
+if(event.keyCode === 68){ //d
+player.pressingRight = false;
+}
+else if(event.keyCode === 83){ //
+player.pressingDown = false;
+}
+else if(event.keyCode === 65){ //a
+player.pressingLeft = false;
+}
+else if(event.keyCode === 87){ //w
+player.pressingUp = false;
+}
+
+document.onkeydown = function(event){ //when key is pressed
+
+if(event.keyCode === 68){ //d
+player.pressingRight = true;
+}
+else if(event.keyCode === 83){ //s
+player.pressingDown = true;
+}
+else if(event.keyCode === 65){ //a
+player.pressingLeft = true;
+}
+else if(event.keyCode === 87){ //w
+player.pressingUp = true;
+}
+else if(event.keyCode === 80){ //p
+
+paused = !paused;
+
+}
+
+};
+
+
+
+
+};
+
+update = function(){
+
+if(paused){
+
+ctx.fillText('Paused', ctc.width/2, ctc.height/2);
+return;
+
+}
+
+ctx.clearRect(0, 0 , WIDTH, HEIGHT);
+
+
+Maps.current.draw();
+frameCount++;
+score++;
+
+Bullet.update();
+Upgrade.update();
+Enemy.update();
+
+player.update();
+ctx.fillText(player.hp + " Hp", 0, 30);
+ctx.fillText('score: ' + score, 200, 30);
+
+};
+
+
+
+startNewGame = function(){
+
+player.hp = 10;
+timeWhenGameStarted = Date.now();
+frameCount = 0;
+Enemy.List = {};
+Bullet.List = {};
+Upgrade.List = {}; //delete everything
+score = 0;
+randomlyGenerateEnemy();
+randomlyGenerateEnemy();
+randomlyGenerateEnemy();
+
+
+};
+
+drawMap = function(){
+var x = WIDTH/2 - player.x;
+var y = HEIGHT/2 - player.y;
+ctx.drawImage(Img.map, 0, 0, Img.map.width, Img.map.height, 0, 0, Img.map.width*2, Img.map.height*2);
+}
+
+
+Maps = function(id, imgSrc, grid){
+
+var self = {
+id:id,
+image:new Image(),
+width:grid[0].length * TILE_SIZE,
+height:grid.length * TILE_SIZE, 
+grid:grid 
+};
+
+self.image.src = imgSrc;
+
+self.isPositionWall = function(pt){
+
+var gridX = Math.floor(pt.x / TILE_SIZE);
+var gridY= Math.floor(pt.y / TILE_SIZE);
+
+if(gridX < 0 || gridX >= self.grid[0].length){
+return true;
+}
+
+if(gridY < 0 || gridY >= self.grid.length){
+return true;
+}
+
+return self.grid[gridY][gridX];
+
+};
+
+self.draw = function(){
+var x = WIDTH/2 - player.x;
+var y = HEIGHT/2 - player.y;
+ctx.drawImage(self.image, 500, 500, self.image.width, self.image.height, x, y, self.image.width*2, self.image.height*2);
+};
+
+return self;
+
+};
+
+Maps.current = Maps('field', 'img/map.jpg',
+
+//Array[row0 or element0][row2 in row0 or element2 in element0]
+
+[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]);
+
+player = Player();
+
+startNewGame();
+
+
+setInterval(update, 40); //(nameOfFunction, period in millisec) setInterval determines the speed in frame(image) per second of a variable(s)
+
+</script>
+
+
+</body>
+
+</html>

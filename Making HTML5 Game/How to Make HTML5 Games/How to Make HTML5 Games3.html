@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<title>RPG</title>
+</head>
+
+<body>
+<canvas id="ctx" width="500" height="500" style="border: 1px solid #000000"></canvas>
+
+<script>
+
+// import canvas into script
+
+var ctx = document.getElementById("ctx").getContext("2d");
+
+//Modify setting
+ctx.font = '30px Arial'; // font used
+
+var x = 50;
+
+// draw text inside canvas
+ctx.fillText("p", x, 50);  
+ctx.fillText("p", x + 50, 50); 
+ctx.fillText("p", x + 50 + 50, 50); 
+
+
+// difference between clearRect and fillRect
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<html>
+
+<head>
+<title>RPG</title>
+</head>
+
+<body>
+<canvas id="ctx" width="500" height="500" style="border: 1px solid #000000"></canvas>
+
+<script>
+
+// import canvas into script
+
+var ctx = document.getElementById("ctx").getContext("2d");
+ctx.font = '30px Arial'; // font used
+
+var x = 50;
+var spdX = 30;
+var y = 50;
+var spdY = 5;
+
+ctx.fillText("p", x, y);
+
+// use function to repeat coding
+
+function update(){
+
+x += spdX;
+y += spdY;   
+ctx.fillText("p", x, y); 
+console.log("Hello", x);
+}
+
+
+
+update(); //call the function update
+
+update(); // the system will first read the function before calling an event regardless where the function is placed 
+
+update();
+
+
+// difference between clearRect and fillRect
+</script>
+
+
+</body>
+
+</html>
