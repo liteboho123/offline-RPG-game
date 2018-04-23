@@ -1,0 +1,80 @@
+{ "height":10,
+ "layers":[
+        {
+         "data":[198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 258, 3151, 260, 261, 262, 3151, 264, 265, 266, 267, 318, 319, 320, 321, 322, 323, 324, 325, 3151, 327, 378, 379, 380, 3151, 382, 383, 384, 385, 386, 387, 438, 3151, 440, 441, 442, 443, 444, 3151, 446, 447, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 558, 559, 560, 561, 562, 563, 3151, 565, 566, 567, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 678, 679, 3151, 681, 682, 683, 684, 685, 3151, 687, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747],
+         "height":10,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":false,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3157, 0, 3145, 0, 3145, 0, 0, 0, 0, 0, 3145, 0, 0, 0, 0, 0, 3145, 0, 3145, 3157, 0, 0, 0, 0, 3157, 0, 0, 0, 0, 0, 0, 3145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3145, 0, 0, 0, 3145, 0, 3145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3145, 0, 0, 0, 3145, 0, 3157, 0, 0, 3145, 0, 3157, 0, 3145, 0, 0, 0, 3145, 0, 0, 0, 0, 0, 0, 0, 3145, 0, 0],
+         "height":10,
+         "name":"Collision",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/..\/..\/Sprite Animations via Spritesheet\/Sprite Animations via Spritesheet4\/img\/map.jpg",
+         "imageheight":1440,
+         "imagewidth":1920,
+         "margin":0,
+         "name":"map",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "firstgid":2701,
+         "image":"..\/..\/..\/..\/..\/..\/Pictures\/New folder\/Untitled.png",
+         "imageheight":537,
+         "imagewidth":865,
+         "margin":0,
+         "name":"Untitled",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "firstgid":3133,
+         "image":"..\/..\/..\/..\/..\/..\/Pictures\/New folder\/car-tyres.jpg",
+         "imageheight":300,
+         "imagewidth":300,
+         "margin":0,
+         "name":"car-tyres",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "version":1,
+ "width":10
+}
